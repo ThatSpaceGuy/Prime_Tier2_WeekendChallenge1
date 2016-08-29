@@ -55,10 +55,10 @@ var addEmployee = function() {
     masterList.push(newEmployee);
 
     // append information to DOM - ver 0.5
-    displayEmployees();
+    // and also display total salary - ver 1.0
+    refreshDisplay();
   }
 
-  // display total salary - ver 1.0
 }; // end addEmployee
 
 var cleanSalary = function(messyNumber){
@@ -66,8 +66,16 @@ var cleanSalary = function(messyNumber){
   // this will remove anything but digits and dots
   cleanNumber = messyNumber.replace(/[^\.\d]/g,'');
 
+  // It's necessary to do a null-check before using .length below
+  var dotMap;
+  if (!cleanNumber.match(/\./g)){
+    dotMap = [];
+  } else {
+    dotMap = cleanNumber.match(/\./g);
+  }
+
   // this will check for multiple dots and if so, keep only the first dot
-  if (cleanNumber.match(/\./g).length>1) {
+  if (dotMap.length>1) {
     firstTime = true;
     toRemove = [];
     for (var i = 0; i < cleanNumber.length; i++) {
@@ -79,37 +87,51 @@ var cleanSalary = function(messyNumber){
         toRemove.push(i);
       }
     }
-
+    var dot;
     for (var j = toRemove.length-1; j >= 0 ; j--) {
       dot = toRemove[j];
-    console.log('Before splice:',cleanNumber);
     cleanNumber = cleanNumber.substr(0,dot)+cleanNumber.substr(dot+1);
-    console.log('After splice:',cleanNumber);
     }
-
   }
-  console.log(cleanNumber);
   cleanNumber = +(Number(cleanNumber).toFixed(2));
-  console.log(cleanNumber);
 
   return cleanNumber;
 }; // end cleanSalary
 
-var displayEmployees = function(){
+var updateSalaryCost = function(){
+  var totalCost = 0;
+
+  for (var i = 0; i < masterList.length; i++) {
+    totalCost += masterList[i].salary;
+  }
+
+  return totalCost;
+};
+
+var refreshDisplay = function(){
   // first empty the employee table on the DOM
   employeeList = document.getElementById('allEmployees');
   emptyText = document.getElementById('defaultText');
+  costText = document.getElementById('monthCost');
   employeeList.innerHTML = '<tr><th>First Name</th><th>Last Name</th>'+
   '<th>ID Number</th><th>Job Title</th><th>Salary</th></tr>';
 
   // Then, if there are no emplyees
   if (masterList.length === 0){
     emptyText.innerHTML='No Employees Entered';
+    costText.innerHTML='';
   } else {
     emptyText.innerHTML='';
+
+    var monthlySalaryCost = updateSalaryCost();
+    var dispTotal =
+    monthlySalaryCost.toLocaleString('USD',{style:'currency',currency:'USD'});
+    costText.innerHTML='Monthly Cost of Salaries: '+dispTotal;
+
     // Then loop through all the employees in the list and add them to the DOM
     for (var i = 0; i < masterList.length; i++) {
-      var dispSalary = '$ '+masterList[i].salary;
+      var dispSalary =
+      masterList[i].salary.toLocaleString('USD',{style:'currency',currency:'USD'});
 
       employeeList.innerHTML += '<tr><td>'+masterList[i].firstName+'</td><td>'+
       masterList[i].lastName+'</td><td>'+masterList[i].idNum+'</td><td>'+

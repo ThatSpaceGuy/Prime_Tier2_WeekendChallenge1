@@ -26,14 +26,20 @@ table {
 }
 
 th {
-	border: 3px;
+	border: 3px black;
 }
 
 td {
-	border: 1px;
+	border: 1px black;
 }
 
 #defaultText {
 	color: red;
 	font-size: 30px;
+}
+
+#monthCost {
+	color: green;
+	font-size: 30px;
+	border: 1px black;
 }
