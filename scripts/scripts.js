@@ -62,9 +62,9 @@ var addEmployee = function() {
 }; // end addEmployee
 
 var cleanSalary = function(messyNumber){
-  console.log('in cleanSalary');
+  console.log('in cleanSalary with:', messyNumber);
   // this will remove anything but digits and dots
-  cleanNumber = messyNumber.replace(/[^\.\d]/g,'');
+  var cleanNumber = messyNumber.replace(/[^\.\d]/g,'');
 
   // It's necessary to do a null-check before using .length below
   var dotMap;
@@ -99,6 +99,7 @@ var cleanSalary = function(messyNumber){
 }; // end cleanSalary
 
 var updateSalaryCost = function(){
+  console.log('in updateSalaryCost');
   var totalCost = 0;
 
   for (var i = 0; i < masterList.length; i++) {
@@ -106,15 +107,16 @@ var updateSalaryCost = function(){
   }
 
   return totalCost;
-};
+}; // end updateSalaryCost
 
 var refreshDisplay = function(){
+  console.log('in refreshDisplay');
   // first empty the employee table on the DOM
-  employeeList = document.getElementById('allEmployees');
-  emptyText = document.getElementById('defaultText');
-  costText = document.getElementById('monthCost');
+  var employeeList = document.getElementById('allEmployees');
+  var emptyText = document.getElementById('defaultText');
+  var costText = document.getElementById('monthCost');
   employeeList.innerHTML = '<tr><th>First Name</th><th>Last Name</th>'+
-  '<th>ID Number</th><th>Job Title</th><th>Salary</th></tr>';
+  '<th>ID Number</th><th>Job Title</th><th>Salary</th><th>Delete</th></tr>';
 
   // Then, if there are no emplyees
   if (masterList.length === 0){
@@ -130,12 +132,32 @@ var refreshDisplay = function(){
 
     // Then loop through all the employees in the list and add them to the DOM
     for (var i = 0; i < masterList.length; i++) {
+      empNum = i+1;
       var dispSalary =
       masterList[i].salary.toLocaleString('USD',{style:'currency',currency:'USD'});
 
       employeeList.innerHTML += '<tr><td>'+masterList[i].firstName+'</td><td>'+
       masterList[i].lastName+'</td><td>'+masterList[i].idNum+'</td><td>'+
-      masterList[i].jobTitle+'</td><td>'+dispSalary+'</td></tr>';
+      masterList[i].jobTitle+'</td><td>'+dispSalary+
+      '</td><td><button onclick="removeEmployee(this.innerHTML)">Delete Employee '+
+      empNum+'</button></td></tr>';
     }
   }
-};
+}; // end refreshDisplay
+
+var removeEmployee = function(callingInfo){
+  console.log('in removeEmployee with:', callingInfo);
+
+  // this removes anything but digits, convert it to a number and -1 for index
+  var deleteIndex = Number(callingInfo.replace(/[^\d]/g,''))-1;
+
+  // remove that employee from the Master List
+  removedFromList  = masterList.splice(deleteIndex,1);
+
+  alert('Employee with ID number of \''+removedFromList[0].idNum+
+  '\' will be removed from the records. His/her salary will no longer be '+
+  'included in the total monthly cost.');
+
+  // Then refresh the display
+  refreshDisplay();
+}; // end removeEmployee
