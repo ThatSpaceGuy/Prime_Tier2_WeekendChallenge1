@@ -139,7 +139,7 @@ var refreshDisplay = function(){
       employeeList.innerHTML += '<tr><td>'+masterList[i].firstName+'</td><td>'+
       masterList[i].lastName+'</td><td>'+masterList[i].idNum+'</td><td>'+
       masterList[i].jobTitle+'</td><td>'+dispSalary+
-      '</td><td><button onclick="removeEmployee(this.innerHTML)">Delete Employee '+
+      '</td><td><button onclick="removeEmployee(this.innerHTML)">Delete Record '+
       empNum+'</button></td></tr>';
     }
   }
