@@ -40,23 +40,60 @@ var addEmployee = function() {
   } // end Double-check for-in
 
   if (!allFieldsEntered){
-      alert('All fields are required!');
-    } else {
-      // clear inputs - ver 0.3
-      firstNameBox.value = '';
-      lastNameBox.value = '';
-      idNumBox.value = '';
-      jobTitleBox.value = '';
-      salaryBox.value = '';
-      // push employee to masterList
-      masterList.push(newEmployee);
+    alert('All fields are required!');
+  } else {
+    // clear inputs - ver 0.3
+    firstNameBox.value = '';
+    lastNameBox.value = '';
+    idNumBox.value = '';
+    jobTitleBox.value = '';
+    salaryBox.value = '';
 
-      // append information to DOM - ver 0.5
-      displayEmployees();
-    }
+    newEmployee.salary = cleanSalary(newEmployee.salary);
+
+    // push employee to masterList
+    masterList.push(newEmployee);
+
+    // append information to DOM - ver 0.5
+    displayEmployees();
+  }
 
   // display total salary - ver 1.0
 }; // end addEmployee
+
+var cleanSalary = function(messyNumber){
+  console.log('in cleanSalary');
+  // this will remove anything but digits and dots
+  cleanNumber = messyNumber.replace(/[^\.\d]/g,'');
+
+  // this will check for multiple dots and if so, keep only the first dot
+  if (cleanNumber.match(/\./g).length>1) {
+    firstTime = true;
+    toRemove = [];
+    for (var i = 0; i < cleanNumber.length; i++) {
+      console.log(cleanNumber[i]);
+      console.log(firstTime);
+      if (cleanNumber[i] == '.' && firstTime){
+        firstTime = false;
+      } else if (cleanNumber[i] == '.') {
+        toRemove.push(i);
+      }
+    }
+
+    for (var j = toRemove.length-1; j >= 0 ; j--) {
+      dot = toRemove[j];
+    console.log('Before splice:',cleanNumber);
+    cleanNumber = cleanNumber.substr(0,dot)+cleanNumber.substr(dot+1);
+    console.log('After splice:',cleanNumber);
+    }
+
+  }
+  console.log(cleanNumber);
+  cleanNumber = +(Number(cleanNumber).toFixed(2));
+  console.log(cleanNumber);
+
+  return cleanNumber;
+}; // end cleanSalary
 
 var displayEmployees = function(){
   // first empty the employee table on the DOM
@@ -70,11 +107,13 @@ var displayEmployees = function(){
     emptyText.innerHTML='No Employees Entered';
   } else {
     emptyText.innerHTML='';
-  // Then loop through all the employees in the list and add them to the DOM
-  for (var i = 0; i < masterList.length; i++) {
-    employeeList.innerHTML += '<tr><td>'+masterList[i].firstName+'</td><td>'+
-    masterList[i].lastName+'</td><td>'+masterList[i].idNum+'</td><td>'+
-    masterList[i].jobTitle+'</td><td>'+masterList[i].salary+'</td></tr>';
+    // Then loop through all the employees in the list and add them to the DOM
+    for (var i = 0; i < masterList.length; i++) {
+      var dispSalary = '$ '+masterList[i].salary;
+
+      employeeList.innerHTML += '<tr><td>'+masterList[i].firstName+'</td><td>'+
+      masterList[i].lastName+'</td><td>'+masterList[i].idNum+'</td><td>'+
+      masterList[i].jobTitle+'</td><td>'+dispSalary+'</td></tr>';
+    }
   }
-}
 };
