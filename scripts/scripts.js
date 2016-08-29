@@ -106,6 +106,9 @@ var updateSalaryCost = function(){
     totalCost += masterList[i].salary;
   }
 
+  // divide by 12 to get monthly cost
+  totalCost = +((totalCost/12).toFixed(2));
+
   return totalCost;
 }; // end updateSalaryCost
 
