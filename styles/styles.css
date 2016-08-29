@@ -18,3 +18,22 @@ button {
 	font-size: 20px;
 	margin: 10px;
 }
+
+table {
+	width: 100%;
+	margin: auto;
+	table-layout: fixed;
+}
+
+th {
+	border: 3px;
+}
+
+td {
+	border: 1px;
+}
+
+#defaultText {
+	color: red;
+	font-size: 30px;
+}
